@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule],
-  templateUrl: './navbar.component.html',
+  templateUrl: './navbar.html',
   styles: [`.active-link { background: rgba(255, 255, 255, 0.2); }`]
 })
 export class NavbarComponent {}
