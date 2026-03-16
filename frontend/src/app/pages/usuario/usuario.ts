@@ -52,20 +52,31 @@ export class UsuarioComponent implements OnInit {
   }
 
   salvar(): void {
-    if (!this.usuarioAtual.nome || this.usuarioAtual.perfis.length === 0) {
-      alert('Preencha o nome e selecione ao menos um perfil!');
+    if (!this.usuarioAtual.nome || this.usuarioAtual.nome.trim().length < 10) {
+      alert('O nome do usuário deve ter no mínimo 10 caracteres.');
+      return;
+    }
+
+    if (!this.usuarioAtual.perfis || this.usuarioAtual.perfis.length === 0) {
+      alert('Selecione ao menos um perfil para o usuário!');
       return;
     }
 
     if (this.editando && this.usuarioAtual.id) {
-      this.usuarioService.atualizar(this.usuarioAtual.id, this.usuarioAtual).subscribe(() => {
-        this.resetar();
-        this.carregarUsuarios();
+      this.usuarioService.atualizar(this.usuarioAtual.id, this.usuarioAtual).subscribe({
+        next: () => {
+          this.resetar();
+          this.carregarUsuarios();
+        },
+        error: (err) => alert('Erro ao atualizar: ' + err.error.message)
       });
     } else {
-      this.usuarioService.salvar(this.usuarioAtual).subscribe(() => {
-        this.resetar();
-        this.carregarUsuarios();
+      this.usuarioService.salvar(this.usuarioAtual).subscribe({
+        next: () => {
+          this.resetar();
+          this.carregarUsuarios();
+        },
+        error: (err) => alert('Erro ao salvar: ' + err.error.message)
       });
     }
   }
