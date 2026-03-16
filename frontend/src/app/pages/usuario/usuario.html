@@ -1,0 +1,59 @@
+<div style="padding: 30px; max-width: 900px; margin: 0 auto;">
+  <h2>Gerenciamento de Usuários</h2>
+
+  <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: baseline; margin-bottom: 25px;">
+    <mat-form-field appearance="outline" style="flex: 2; min-width: 250px;">
+      <mat-label>Nome do Usuário</mat-label>
+      <input matInput [(ngModel)]="usuarioAtual.nome" placeholder="Ex: Gabriel Bispo">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;">
+      <mat-label>Perfis</mat-label>
+      <mat-select [(ngModel)]="usuarioAtual.perfis" [compareWith]="compararPerfis" multiple>
+        @for (perfil of perfisDisponiveis; track perfil.id) {
+          <mat-option [value]="perfil">{{perfil.descricao}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="salvar()">
+      <mat-icon>{{ editando ? 'save' : 'person_add' }}</mat-icon>
+      {{ editando ? 'Atualizar' : 'Cadastrar' }}
+    </button>
+    <button *ngIf="editando" mat-button (click)="resetar()">Cancelar</button>
+  </div>
+
+  <table mat-table [dataSource]="usuarios" class="mat-elevation-z8" style="width: 100%;">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let user"> {{user.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="perfis">
+      <th mat-header-cell *matHeaderCellDef> Perfis </th>
+      <td mat-cell *matCellDef="let user">
+        @for (p of user.perfis; track p.id) {
+          <span style="background: #e0e0e0; padding: 2px 8px; border-radius: 12px; margin-right: 4px; font-size: 12px;">
+            {{p.descricao}}
+          </span>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef> Ações </th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-icon-button color="primary" (click)="editar(user)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="deletar(user.id!)"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+</div>
